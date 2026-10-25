@@ -15,9 +15,9 @@
   <h2>Use and storage</h2>
   <ul><li>The API token is stored locally in Chrome and sent only to <code>https://api.optimizely.com</code> for user-triggered validation and metadata requests.</li><li>Page data, cookies, experiments and event logs are processed locally.</li><li>The extension does not sell data, use it for advertising, or send it to an analytics service.</li><li>QR codes are generated locally. Users should treat Optimizely-generated share links as sensitive.</li></ul>
   <h2>Retention and deletion</h2>
-  <p>The token and settings remain in the Chrome profile until removed in Settings or the extension is removed. Event logs can be cleared from the popup.</p>
+  <p>The token and settings remain in the Chrome profile until removed in Settings or the extension is removed. Event logs are kept in Chrome extension storage while the related tab is open and may optionally be preserved across reloads when the user enables that setting. They can be cleared from the popup.</p>
   <h2>Third parties</h2>
-  <p>Optimizely receives API requests when the user configures a token and uses API-backed features. No other remote backend is operated by this project.</p>
+  <p>Optimizely receives API requests when the user configures a token and uses API-backed features. The user may also explicitly copy or open Optimizely-generated share links, including through a locally generated QR code. No other remote backend is operated by this project.</p>
   <h2>Contact</h2>
   <p>For questions or issue reports, use the repository's <a href="https://github.com/lukas-is-working/unofficial-optimizely-test-tool/issues">GitHub Issues</a>.</p>
 </body>

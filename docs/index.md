@@ -27,11 +27,11 @@ The extension processes the following data when the user uses the related featur
 
 ## Retention and deletion
 
-The API token and extension settings remain in the user's Chrome profile until removed through Settings or Chrome's extension storage. Event logs are kept only in the extension's local/session storage and can be cleared in the popup. Removing the extension removes its stored data according to Chrome's storage behavior.
+The API token and extension settings remain in the user's Chrome profile until removed through Settings or Chrome's extension storage. Event logs are kept in Chrome extension storage while the related tab is open and may optionally be preserved across reloads when the user enables that setting. They can be cleared in the popup. Removing the extension removes its stored data according to Chrome's storage behavior.
 
 ## Third parties
 
-Optimizely receives API requests when the user configures an API token and uses API-backed features. Those requests are governed by Optimizely's own privacy terms. No other remote backend is operated by this project.
+Optimizely receives API requests when the user configures an API token and uses API-backed features. The user may also explicitly copy or open Optimizely-generated share links, including through a locally generated QR code. Those requests are governed by Optimizely's own privacy terms. No other remote backend is operated by this project.
 
 ## Contact
 

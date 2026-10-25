@@ -75,7 +75,7 @@ Chrome requires this setting to be enabled manually. Reload the incognito page a
 
 ## Privacy policy text
 
-The extension has no remote backend. It stores the personal API token locally in Chrome and sends it only to Optimizely's API for user-triggered validation and metadata requests. Page runtime state, cookies and event logs are processed locally. The extension does not sell personal data or transfer it to an analytics service. Users can remove the stored API token from Settings.
+The extension has no remote backend. It stores the personal API token locally in Chrome and sends it only to Optimizely's API for user-triggered validation and metadata requests. Page runtime state, cookies and event logs are processed locally; the optional event-log preservation setting uses Chrome extension storage. The extension does not sell personal data or transfer it to an analytics service. Users can remove the stored API token from Settings.
 
 The public privacy policy is intended to be published through GitHub Pages at:
 

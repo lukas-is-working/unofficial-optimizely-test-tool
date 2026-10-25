@@ -4,7 +4,7 @@ Unofficial community-built Chrome extension for testing Optimizely experiments a
 
 This project is not affiliated with, endorsed by, or sponsored by Optimizely.
 
-Current version: `1.0.1`
+Current version: `1.0.2`
 
 ## Distribution
 

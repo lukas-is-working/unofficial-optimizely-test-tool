@@ -40,6 +40,7 @@ async function updateAssistantRules() {
 }
 
 function updateExperimentBadge(tabId, state) {
+  if (state?.runtimePending) return;
   const count = state?.experiments?.length || 0;
   clearTimeout(badgeTimers.get(tabId));
   badgeTimers.set(tabId, setTimeout(() => {
@@ -213,6 +214,14 @@ updateAssistantRules().catch(() => {});
 
 chrome.tabs.onActivated.addListener(({tabId}) => {
   restoreExperimentBadge(tabId);
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.status !== 'loading') return;
+  clearTimeout(badgeTimers.get(tabId));
+  badgeTimers.delete(tabId);
+  badgeCounts.delete(tabId);
+  chrome.action.setBadgeText({tabId, text: ''}).catch(() => {});
 });
 
 chrome.tabs.query({}).then((tabs) => {

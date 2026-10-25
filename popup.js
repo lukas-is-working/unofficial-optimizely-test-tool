@@ -362,7 +362,7 @@ function render(state) {
       canvas.dataset.qrImage = button.dataset.qr;
       canvas.setAttribute('aria-label', 'QR code for the variant');
       canvas.hidden = false;
-      showCopied(button, 'QR-Code');
+      button.classList.remove('copied');
     } catch (error) {
       setMessage(`Could not generate QR code: ${error.message}`);
     }

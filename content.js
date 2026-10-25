@@ -2,7 +2,7 @@
   if (window.__bfOptimizelyToolLoaded) return;
   window.__bfOptimizelyToolLoaded = true;
 
-  const state = {experiments: [], events: [], optimizelyLoaded: false, metadata: {}, startedAt: Date.now()};
+  const state = {experiments: [], events: [], optimizelyLoaded: false, runtimePending: true, metadata: {}, startedAt: Date.now()};
   const seenQueueEntries = new Set();
   let lastStateSignature = '';
   let eventsPaused = false;
@@ -28,7 +28,7 @@
   };
 
   const publishIfChanged = () => {
-    const snapshot = safeJson({experiments: state.experiments, optimizelyLoaded: state.optimizelyLoaded, metadata: state.metadata});
+    const snapshot = safeJson({experiments: state.experiments, optimizelyLoaded: state.optimizelyLoaded, runtimePending: state.runtimePending, metadata: state.metadata});
     if (snapshot === lastStateSignature) return;
     lastStateSignature = snapshot;
     publishState();
@@ -253,6 +253,7 @@
     try {
       const optimizely = window.optimizely;
       state.optimizelyLoaded = Boolean(optimizely && (typeof optimizely.get === 'function' || typeof optimizely.push === 'function'));
+      state.runtimePending = !state.optimizelyLoaded && Date.now() - state.startedAt < 2000;
       if (optimizely) {
       if (Array.isArray(optimizely)) {
         optimizely.forEach((entry) => {

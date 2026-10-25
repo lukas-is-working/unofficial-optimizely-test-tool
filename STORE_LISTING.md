@@ -6,11 +6,13 @@ Unofficial Optimizely Test Tool
 
 ## Short description
 
-Inspect and test Optimizely experiments, variants, cookies, events and share links.
+Inspect and test Optimizely experiments, variants, cookies and events.
+
+Recommended category: **Developer Tools**
 
 ## Detailed description
 
-Unofficial community-built tooling for QA and development teams working with Optimizely Web experiments.
+Unofficial community-built tooling for QA engineers, developers and analysts working with Optimizely Web experiments. Detect active experiments, switch variants, inspect events and test across local, staging and production-like environments from one browser tool.
 
 Features include:
 
@@ -25,6 +27,8 @@ Features include:
 - Use the tool in an incognito window after enabling Chrome's incognito permission.
 
 This extension is not affiliated with, endorsed by, or sponsored by Optimizely.
+
+It is intended for authorized testing and debugging only. It does not modify experiment configuration in Optimizely.
 
 ## Support
 

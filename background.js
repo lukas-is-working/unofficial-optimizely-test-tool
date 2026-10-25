@@ -48,7 +48,7 @@ function updateExperimentBadge(tabId, state) {
     badgeCounts.set(tabId, count);
     chrome.action.setBadgeText({tabId, text: count ? String(count) : ''}).catch(() => {});
     if (count) chrome.action.setBadgeBackgroundColor({tabId, color: '#17834b'}).catch(() => {});
-  }, 300));
+  }, count === 0 && badgeCounts.get(tabId) > 0 ? 1200 : 300));
 }
 
 async function restoreExperimentBadge(tabId) {

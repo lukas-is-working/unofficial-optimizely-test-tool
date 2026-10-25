@@ -14,6 +14,10 @@ function matchesEventFilter(event) {
 }
 
 const sendToPage = (message) => chrome.scripting.executeScript({target: {tabId: tab.id}, func: (payload) => window.postMessage(payload, '*'), args: [message]});
+const isWebTab = () => {
+  if (!tab?.id || !tab.url) return false;
+  try { return /^https?:$/.test(new URL(tab.url).protocol); } catch (_) { return false; }
+};
 const setMessage = (text) => {
   $('#message').textContent = text;
   clearTimeout(copyMessageTimer);
@@ -34,6 +38,11 @@ async function readCookieState() {
 }
 
 async function updateCookie(toggle) {
+  if (!isWebTab()) {
+    toggle.checked = false;
+    setMessage('Cookies are only available on web pages.');
+    return;
+  }
   const url = new URL(tab.url).origin;
   let verified = false;
   try {
@@ -59,6 +68,11 @@ async function updateCookie(toggle) {
 }
 
 async function getState() {
+  if (!isWebTab()) {
+    const state = {experiments: [], events: [], optimizelyLoaded: false, runtimePending: false, apiPending: false, apiSkipped: true};
+    render(state);
+    return;
+  }
   let state = {experiments: [], events: [], optimizelyLoaded: false, runtimePending: true, apiPending: true};
   for (let attempt = 0; attempt < 12; attempt += 1) {
     try {
@@ -422,6 +436,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // the toggles reflect the browser immediately while the page is inspected.
     getState().catch((error) => setMessage(`Page check failed: ${error.message}`));
   $('#clear-events').addEventListener('click', async () => {
+    if (!isWebTab()) return;
     try {
       await chrome.scripting.executeScript({
         target: {tabId: tab.id},
@@ -437,6 +452,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
   $('#pause-events').addEventListener('click', () => {
+    if (!isWebTab()) return;
     eventsPaused = !eventsPaused;
     $('#pause-events').textContent = eventsPaused ? 'Resume' : 'Pause';
     chrome.scripting.executeScript({

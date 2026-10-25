@@ -4,7 +4,9 @@ Unofficial community-built Chrome extension for testing Optimizely experiments a
 
 This project is not affiliated with, endorsed by, or sponsored by Optimizely.
 
-Current version: `1.0.2`
+Current version: `1.0.3`
+
+Security reporting: see [`SECURITY.md`](SECURITY.md). Do not include tokens, preview credentials or customer data in public issues.
 
 ## Distribution
 
@@ -72,6 +74,7 @@ Chrome requires this setting to be enabled manually. Reload the incognito page a
 - The API token is not synchronized, injected into pages, logged or exported by the extension. Optimizely-generated share links are treated as opaque API data; users should handle any preview credentials contained in such links as sensitive.
 - QR codes are generated locally in the extension.
 - Page access, scripting, cookies and broad host access are required to inspect experiments, manage configured cookies and support local as well as remote shop domains.
+- The page integration deliberately runs in the page's main world because Optimizely exposes its runtime there. The extension does not expose the API token to that world; page-originated runtime messages are treated as diagnostic input only.
 
 ## Privacy policy text
 

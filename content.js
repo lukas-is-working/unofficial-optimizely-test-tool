@@ -54,7 +54,10 @@
   };
 
   const safeJson = (value) => {
-    try { return JSON.parse(JSON.stringify(value)); } catch { return String(value); }
+    try {
+      const serialized = JSON.stringify(value);
+      return serialized.length > 20000 ? `${serialized.slice(0, 20000)} …` : JSON.parse(serialized);
+    } catch { return String(value).slice(0, 20000); }
   };
 
   const isOptimizelyLog = (args) => args.some((value) => optimizelyLogPattern.test(typeof value === 'string' ? value : safeJson(value)));

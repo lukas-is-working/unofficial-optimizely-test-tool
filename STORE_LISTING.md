@@ -32,7 +32,7 @@ Support is provided through the repository's GitHub Issues page.
 
 ## Privacy
 
-Privacy policy: `https://lukas-is-working.github.io/unofficial-optimizely-test-tool/`
+Privacy policy: `https://lukas-is-working.github.io/unofficial-optimizely-test-tool/privacy-policy.html`
 
 The extension stores the user's API token locally and sends it only to Optimizely's API for user-triggered requests. Page data, cookies and event logs are processed locally.
 

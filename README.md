@@ -75,6 +75,6 @@ The extension has no remote backend. It stores the personal API token locally in
 
 The public privacy policy is intended to be published through GitHub Pages at:
 
-`https://lukas-is-working.github.io/unofficial-optimizely-test-tool/`
+`https://lukas-is-working.github.io/unofficial-optimizely-test-tool/privacy-policy.html`
 
 Use that HTTPS URL in the Chrome Web Store privacy section after GitHub Pages has been enabled.

@@ -1,0 +1,16 @@
+.overlay { position: fixed; inset: 0; display: grid; place-items: center; padding: 14px; background: #123c2dcc; }
+.overlay[hidden] { display: none; }
+.setup-dialog { width: 100%; display: grid; gap: 8px; box-shadow: 0 12px 32px #102a1c55; }
+.setup-dialog h2 { font-size: 18px; margin: 0 0 2px; }
+.setup-dialog p { color: var(--muted); }
+.setup-dialog .eyebrow { color: var(--red); margin: 0; }
+.setup-dialog button { margin-top: 4px; font-weight: 600; }
+.setup-dialog #save-token { background: var(--red); border-color: var(--red); color: #fff; }
+.setup-dialog #save-token:hover { background: var(--red-dark); border-color: var(--red-dark); }
+.setup-dialog #skip-api-setup { background: #f2f3f3; border-color: #c8ceca; color: var(--ink); }
+.setup-dialog #skip-api-setup:hover { background: #e7eae8; border-color: #9da7a1; }
+.setup-actions { display: flex; gap: 8px; }
+.setup-actions button { flex: 1; }
+.error { color: #a33b31 !important; min-height: 16px; font-size: 11px; }
+.setup-dialog input { width: 100%; min-height: 40px; }
+.setup-dialog .error { margin: 0; }

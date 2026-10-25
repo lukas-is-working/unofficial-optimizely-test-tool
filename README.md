@@ -10,7 +10,11 @@ Current version: `1.0.1`
 
 Send the complete `optimizely-test-tool` folder as a ZIP file. Do not include personal files or real API tokens. Each user enters their own token locally.
 
-## Install in Chrome
+## Chrome Web Store installation
+
+For the unlisted Chrome Web Store release, open the direct Store link and click **Add to Chrome**. The extension is not shown in public search results.
+
+## Local/Beta installation
 
 1. Extract the ZIP file.
 2. Open `chrome://extensions`.

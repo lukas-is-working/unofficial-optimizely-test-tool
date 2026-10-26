@@ -26,11 +26,18 @@ const setMessage = (text) => {
 let cookieNames = [];
 let configuredCookies = [];
 
+async function getCookieStoreId() {
+  if (!tab?.id) return undefined;
+  const stores = await chrome.cookies.getAllCookieStores();
+  return stores.find((store) => store.tabIds.includes(tab.id))?.id;
+}
+
 async function readCookieState() {
   if (!tab?.url || !/^https?:/.test(tab.url)) return;
   let values;
   try {
-    values = await Promise.all(cookieNames.map((name) => chrome.cookies.get({url: tab.url, name})));
+    const storeId = await getCookieStoreId();
+    values = await Promise.all(cookieNames.map((name) => chrome.cookies.get({url: tab.url, name, ...(storeId ? {storeId} : {})})));
   } catch (_) {
     values = [];
   }
@@ -46,14 +53,16 @@ async function updateCookie(toggle) {
   const url = new URL(tab.url).origin;
   let verified = false;
   try {
+    const storeId = await getCookieStoreId();
+    const cookieStore = storeId ? {storeId} : {};
     if (toggle.checked) {
-      await chrome.cookies.set({url, name: toggle.dataset.cookie, value: '1', path: '/', secure: new URL(tab.url).protocol === 'https:'});
-      const cookie = await chrome.cookies.get({url, name: toggle.dataset.cookie});
+      await chrome.cookies.set({url, name: toggle.dataset.cookie, value: '1', path: '/', secure: new URL(tab.url).protocol === 'https:', ...cookieStore});
+      const cookie = await chrome.cookies.get({url, name: toggle.dataset.cookie, ...cookieStore});
       verified = cookie?.value === '1';
       setMessage(verified ? 'Cookie set' : 'Cookie could not be verified');
     } else {
-      await chrome.cookies.remove({url, name: toggle.dataset.cookie});
-      const cookie = await chrome.cookies.get({url, name: toggle.dataset.cookie});
+      await chrome.cookies.remove({url, name: toggle.dataset.cookie, ...cookieStore});
+      const cookie = await chrome.cookies.get({url, name: toggle.dataset.cookie, ...cookieStore});
       verified = !cookie;
       setMessage(verified ? 'Cookie deleted' : 'Cookie could not be deleted');
     }
@@ -251,7 +260,23 @@ function formatStatus(value) {
 }
 
 function buildForceLink(variation) {
-  return variation?.shareLink || '';
+  if (!variation?.shareLink || !tab?.url) return '';
+  try {
+    const currentUrl = new URL(tab.url);
+    const shareUrl = new URL(variation.shareLink, currentUrl.origin);
+
+    // Optimizely returns absolute share links for one configured shop domain.
+    // Keep its preview parameters, but always target the page currently being tested.
+    for (const key of [...currentUrl.searchParams.keys()]) {
+      if (key.startsWith('optimizely_')) currentUrl.searchParams.delete(key);
+    }
+    for (const [key, value] of shareUrl.searchParams.entries()) {
+      currentUrl.searchParams.set(key, value);
+    }
+    return currentUrl.toString();
+  } catch (_) {
+    return '';
+  }
 }
 
 function showCopied(button, originalText) {

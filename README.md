@@ -4,9 +4,11 @@ Unofficial community-built Chrome extension for testing Optimizely experiments a
 
 This project is not affiliated with, endorsed by, or sponsored by Optimizely.
 
-Current version: `1.0.5`
+Current version: `1.0.6`
 
 Security reporting: see [`SECURITY.md`](SECURITY.md). Do not include tokens, preview credentials or customer data in public issues.
+
+See [`CHANGELOG.md`](CHANGELOG.md) for release history.
 
 ## Distribution
 

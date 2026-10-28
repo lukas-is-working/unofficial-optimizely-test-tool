@@ -1,47 +1,191 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Unofficial Optimizely Test Tool Settings</title>
-  <link rel="stylesheet" href="options.css">
-</head>
-<body class="options-page">
-  <header class="options-header">
-    <div class="options-brand"><img src="icons/icon-128.png" alt=""><div><h1>Unofficial Optimizely Test Tool</h1><p class="header-subtitle">Settings and credentials</p><p class="brand-disclaimer">Not affiliated with or endorsed by Optimizely</p></div></div>
-  </header>
-  <main class="options-main">
-    <section class="settings-card settings-card-token">
-      <div class="card-heading"><span class="card-icon" aria-hidden="true">🔑</span><div><h2>Optimizely API</h2><p>The token is stored locally and used only for Optimizely requests.</p></div></div>
-      <a class="token-link" href="https://app.optimizely.com/v2/profile/api" target="_blank" rel="noopener">Manage Optimizely API token ↗</a>
-      <label for="api-token">Personal API token</label>
-      <div class="secret-input"><input id="api-token" type="password" autocomplete="off" spellcheck="false" placeholder="Paste token" aria-describedby="api-token-hint"><button id="toggle-api-token" class="visibility-button" type="button" aria-label="Show API token" title="Show API token" aria-pressed="false"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2.2 12s3.6-6 9.8-6 9.8 6 9.8 6-3.6 6-9.8 6-9.8-6-9.8-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg></button></div>
-      <p id="api-token-hint" class="field-hint">The token is validated against the account when saved.</p>
-      <button id="remove-api-token" class="danger-button" type="button">Remove API token</button>
-      <p id="status" class="settings-status" role="status" aria-live="polite"></p>
-    </section>
-    <section class="settings-card">
-      <div class="card-heading"><span class="card-icon" aria-hidden="true">🍪</span><div><h2>Testing cookies</h2><p>Add the cookies you want to set and check in the popup.</p></div></div>
-      <p class="field-hint"><strong>Label</strong> is the name shown in the popup. <strong>Cookie name</strong> is the exact technical cookie name that Chrome will set, read and remove.</p>
-      <div id="cookie-settings" class="cookie-settings"></div>
-      <button id="add-cookie" class="primary-button" type="button">Add cookie</button>
-    </section>
-    <section class="settings-card settings-card-info">
-      <div class="card-heading"><span class="card-icon" aria-hidden="true">ℹ</span><div><h2>Notes</h2><p>Cookie name changes are used the next time the popup opens. A changed API token must be validated again.</p></div></div>
-    </section>
-    <section class="settings-card">
-      <div class="card-heading"><span class="card-icon" aria-hidden="true">🧩</span><div><h2>Snippet options</h2><p>Control Optimizely snippet loading and debugging.</p></div></div>
-      <div class="assistant-settings">
-        <label class="setting-toggle"><span class="setting-switch"><input id="useS3snippetCheckbox" type="checkbox"><span class="switch" aria-hidden="true"></span></span><span><strong>Use instant snippet</strong><small>Use the Amazon S3 version of the snippet</small></span></label>
-        <label class="setting-toggle"><span class="setting-switch"><input id="optimizelyUseNonCacheSnippetCheckbox" type="checkbox"><span class="switch" aria-hidden="true"></span></span><span><strong>Always use the non-cached snippet</strong><small>Bypass the cache when loading the snippet</small></span></label>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Unofficial Optimizely Test Tool Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body class="options-page">
+    <header class="options-header">
+      <div class="options-brand">
+        <img src="icons/icon-128.png" alt="" />
+        <div>
+          <h1>Unofficial Optimizely Test Tool</h1>
+          <p class="header-subtitle">Settings and credentials</p>
+          <p class="brand-disclaimer">
+            Not affiliated with or endorsed by Optimizely
+          </p>
+        </div>
       </div>
-    </section>
-    <section class="settings-card">
-      <div class="card-heading"><span class="card-icon" aria-hidden="true">🧾</span><div><h2>Event log</h2><p>Choose whether the event log should survive a page reload.</p></div></div>
-      <label class="setting-toggle"><span class="setting-switch"><input id="preserve-event-log" type="checkbox"><span class="switch" aria-hidden="true"></span></span><span><strong>Keep event log after reload</strong><small>Events remain available when the page is reloaded.</small></span></label>
-    </section>
-    <div class="settings-footer"><span id="autosave-status" class="settings-status" role="status" aria-live="polite"></span><button id="reset-settings" class="danger-button" type="button">Reset settings</button></div>
-  </main>
-  <script src="options.js"></script>
-</body>
+    </header>
+    <main class="options-main">
+      <section class="settings-card settings-card-token">
+        <div class="card-heading">
+          <span class="card-icon" aria-hidden="true">🔑</span>
+          <div>
+            <h2>
+              Optimizely API
+              <button
+                class="info-icon"
+                type="button"
+                data-tooltip="The token is stored locally and used only for Optimizely requests. A changed token is validated when saved; cookie and UI settings do not trigger token validation."
+                aria-label="API token information"
+              >
+                i
+              </button>
+            </h2>
+            <p>Optional access to API metadata and share links.</p>
+          </div>
+        </div>
+        <a
+          class="token-link"
+          href="https://app.optimizely.com/v2/profile/api"
+          target="_blank"
+          rel="noopener"
+          >Manage Optimizely API token ↗</a
+        >
+        <label for="api-token">Personal API token</label>
+        <div class="secret-input">
+          <input
+            id="api-token"
+            type="password"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Paste token"
+          /><button
+            id="toggle-api-token"
+            class="visibility-button"
+            type="button"
+            aria-label="Show API token"
+            title="Show API token"
+            aria-pressed="false"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path
+                d="M2.2 12s3.6-6 9.8-6 9.8 6 9.8 6-3.6 6-9.8 6-9.8-6-9.8-6Z"
+              ></path>
+              <circle cx="12" cy="12" r="2.7"></circle>
+            </svg>
+          </button>
+        </div>
+        <button id="remove-api-token" class="danger-button" type="button">
+          Remove API token
+        </button>
+        <p
+          id="status"
+          class="settings-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+      <section class="settings-card">
+        <div class="card-heading">
+          <span class="card-icon" aria-hidden="true">🍪</span>
+          <div>
+            <h2>
+              Testing cookies
+              <button
+                class="info-icon"
+                type="button"
+                data-tooltip="Cookie name changes are used the next time the popup opens. Label is shown in the popup; Cookie name is the exact technical name Chrome sets, reads and removes."
+                aria-label="Testing cookies information"
+              >
+                i
+              </button>
+            </h2>
+            <p>Add the cookies you want to set and check in the popup.</p>
+          </div>
+        </div>
+        <div id="cookie-settings" class="cookie-settings"></div>
+        <button id="add-cookie" class="primary-button" type="button">
+          Add cookie
+        </button>
+      </section>
+      <section class="settings-card">
+        <div class="card-heading">
+          <span class="card-icon" aria-hidden="true">🧩</span>
+          <div>
+            <h2>
+              Snippet options
+              <button
+                class="info-icon"
+                type="button"
+                data-tooltip="Instant snippet uses the Amazon S3 version. Non-cache adds OPTIMIZELY_NOCACHE=1. Changes apply after the page is reloaded."
+                aria-label="Snippet options information"
+              >
+                i
+              </button>
+            </h2>
+            <p>Control how the Optimizely snippet loads.</p>
+          </div>
+        </div>
+        <div class="assistant-settings">
+          <label class="setting-toggle"
+            ><span class="setting-switch"
+              ><input id="useS3snippetCheckbox" type="checkbox" /><span
+                class="switch"
+                aria-hidden="true"
+              ></span></span
+            ><span
+              ><strong>Use instant snippet</strong
+              ><small>Use the Amazon S3 version of the snippet</small></span
+            ></label
+          >
+          <label class="setting-toggle"
+            ><span class="setting-switch"
+              ><input
+                id="optimizelyUseNonCacheSnippetCheckbox"
+                type="checkbox" /><span
+                class="switch"
+                aria-hidden="true"
+              ></span></span
+            ><span
+              ><strong>Always use the non-cached snippet</strong
+              ><small>Bypass the cache when loading the snippet</small></span
+            ></label
+          >
+        </div>
+      </section>
+      <section class="settings-card">
+        <div class="card-heading">
+          <span class="card-icon" aria-hidden="true">🧾</span>
+          <div>
+            <h2>
+              Event log
+              <button
+                class="info-icon"
+                type="button"
+                data-tooltip="When enabled, events are preserved in Chrome extension storage across page reloads. They remain local to your browser."
+                aria-label="Event log information"
+              >
+                i
+              </button>
+            </h2>
+            <p>Choose whether to keep events after reloads.</p>
+          </div>
+        </div>
+        <label class="setting-toggle"
+          ><span class="setting-switch"
+            ><input id="preserve-event-log" type="checkbox" /><span
+              class="switch"
+              aria-hidden="true"
+            ></span></span
+          ><span><strong>Keep event log after reload</strong></span></label
+        >
+      </section>
+      <div class="settings-footer">
+        <span
+          id="autosave-status"
+          class="settings-status"
+          role="status"
+          aria-live="polite"
+        ></span
+        ><button id="reset-settings" class="danger-button" type="button">
+          Reset settings
+        </button>
+      </div>
+    </main>
+    <script src="options.js"></script>
+  </body>
 </html>

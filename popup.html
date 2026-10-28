@@ -1,39 +1,214 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Unofficial Optimizely Test Tool</title><link rel="stylesheet" href="popup.css"><link rel="stylesheet" href="readability.css"><link rel="stylesheet" href="setup.css"></head>
-<body>
-  <header><div class="header-brand"><img src="icons/icon-128.png" alt=""><div><h1>Unofficial Optimizely Test Tool</h1><small class="brand-disclaimer">Not affiliated with or endorsed by Optimizely</small></div></div><div class="header-actions"><button type="button" id="open-popout" title="Open as separate window" aria-label="Open as separate window">⧉</button><button type="button" id="open-options" title="Settings" aria-label="Settings">⚙</button><button type="button" id="refresh" title="Refresh" aria-label="Refresh">↻</button></div></header>
-  <main>
-     <section class="card"><div class="section-title"><h2>Active experiments</h2><span id="status" role="status" aria-live="polite">Checking page ...</span></div><div id="experiments" class="empty" aria-live="polite">No experiments detected.</div></section>
-     <section id="cookie-modes-card" class="card" hidden><div class="section-title"><h2>Test cookies</h2><span id="page-host"></span></div><div id="cookie-modes" class="cookie-modes"></div></section>
-     <section class="card metadata-card"><div class="section-title"><h2>Metadata</h2><span id="runtime-status">Loading ...</span></div><div class="status-row"><span id="experiment-status">Experiments: Loading ...</span><span id="api-status">API: Loading ...</span><button id="retry-api" class="link">Refresh API</button></div><dl id="metadata"><div><dt>Snippet revision</dt><dd>Loading ...</dd></div><div><dt>Last updated</dt><dd>Loading ...</dd></div><div><dt>Project ID</dt><dd>Loading ...</dd></div><div><dt>Active pages on this page</dt><dd>Loading ...</dd></div></dl></section>
-     <section class="card"><div class="section-title"><h2>Event log <span id="event-count" class="event-count-label">0</span></h2><div class="event-actions"><button id="pause-events" class="link">Pause</button><button id="export-events" class="link">Export CSV</button><button id="clear-events" class="link">Clear</button></div></div><div class="event-toolbar"><label for="event-filter">Show</label><select id="event-filter"><option value="all">All events</option><option value="Optimizely">Optimizely</option><option value="Network">Network</option></select></div><div id="events" class="events"><p class="empty">No Optimizely events yet.</p></div></section>
-     <section class="card compact-settings"><div class="section-title"><h2>Debugging</h2><span>Page reload required</span></div><label class="popup-setting"><span class="setting-switch"><input id="disable-console-logging" type="checkbox"><span class="switch" aria-hidden="true"></span></span><span><strong>Disable console logging</strong><small>Suppress Optimizely debug output</small></span></label><label class="popup-setting"><span class="setting-switch"><input id="disable-optimizely" type="checkbox"><span class="switch" aria-hidden="true"></span></span><span><strong>Disable Optimizely</strong><small>Block the Optimizely script on this page</small></span></label></section>
-  </main>
-  <footer><span id="message" role="status" aria-live="polite"></span></footer>
-  <div id="api-setup-overlay" class="overlay" hidden>
-    <section class="setup-dialog card" role="dialog" aria-modal="true" aria-labelledby="api-setup-title">
-      <p class="eyebrow">OPTIONAL</p>
-      <h2 id="api-setup-title">Optimizely API token</h2>
-      <p>An API token enables additional metadata such as status, update time and share links.</p>
-      <p>All page and testing features work without a token. You can add one later through Settings.</p>
-      <a class="token-link" href="https://app.optimizely.com/v2/profile/api" target="_blank" rel="noopener">Manage Optimizely API token ↗</a>
-      <label for="api-token">Personal API token</label>
-      <input id="api-token" type="password" autocomplete="off" placeholder="Enter optional token">
-      <p id="setup-error" class="error"></p>
-      <div class="setup-actions"><button id="skip-api-setup" class="secondary-button">Skip</button><button id="save-token" class="primary-button">Validate and save token</button></div>
-    </section>
-  </div>
-  <div id="optimizely-overlay" class="overlay" hidden>
-    <section class="setup-dialog card" role="dialog" aria-modal="true" aria-labelledby="runtime-title">
-      <p class="eyebrow">OPTIMIZELY STATUS</p>
-      <h2 id="runtime-title">Optimizely was not loaded</h2>
-      <p>Experiments and events can only be shown after Optimizely has loaded on this page.</p>
-      <p>Check that cookies were accepted and the Optimizely script is available.</p>
-      <button id="reload-page" class="primary-button">Reload page</button>
-    </section>
-  </div>
-  <script src="qrcode.js"></script>
-  <script src="popup.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Unofficial Optimizely Test Tool</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="readability.css" />
+    <link rel="stylesheet" href="setup.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-brand">
+        <img src="icons/icon-128.png" alt="" />
+        <div>
+          <h1>Unofficial Optimizely Test Tool</h1>
+          <small class="brand-disclaimer"
+            >Not affiliated with or endorsed by Optimizely</small
+          >
+        </div>
+      </div>
+      <div class="header-actions">
+        <button
+          type="button"
+          id="open-popout"
+          title="Open as separate window"
+          aria-label="Open as separate window"
+        >
+          ⧉</button
+        ><button
+          type="button"
+          id="open-options"
+          title="Settings"
+          aria-label="Settings"
+        >
+          ⚙</button
+        ><button
+          type="button"
+          id="refresh"
+          title="Refresh"
+          aria-label="Refresh"
+        >
+          ↻
+        </button>
+      </div>
+    </header>
+    <main>
+      <section class="card">
+        <div class="section-title">
+          <h2>Active experiments</h2>
+          <span id="status" role="status" aria-live="polite"
+            >Checking page ...</span
+          >
+        </div>
+        <div id="experiments" class="empty" aria-live="polite">
+          No experiments detected.
+        </div>
+      </section>
+      <section id="cookie-modes-card" class="card" hidden>
+        <div class="section-title">
+          <h2>Test cookies</h2>
+          <span id="page-host"></span>
+        </div>
+        <div id="cookie-modes" class="cookie-modes"></div>
+      </section>
+      <section class="card metadata-card">
+        <div class="section-title">
+          <h2>Metadata</h2>
+          <span id="runtime-status">Loading ...</span>
+        </div>
+        <div class="status-row">
+          <span id="experiment-status">Experiments: Loading ...</span
+          ><span id="api-status">API: Loading ...</span
+          ><button id="retry-api" class="link">Refresh API</button>
+        </div>
+        <dl id="metadata">
+          <div>
+            <dt>Snippet revision</dt>
+            <dd>Loading ...</dd>
+          </div>
+          <div>
+            <dt>Last updated</dt>
+            <dd>Loading ...</dd>
+          </div>
+          <div>
+            <dt>Project ID</dt>
+            <dd>Loading ...</dd>
+          </div>
+          <div>
+            <dt>Active pages on this page</dt>
+            <dd>Loading ...</dd>
+          </div>
+        </dl>
+      </section>
+      <section class="card">
+        <div class="section-title">
+          <h2>
+            Event log <span id="event-count" class="event-count-label">0</span>
+          </h2>
+          <div class="event-actions">
+            <button id="pause-events" class="link">Pause</button
+            ><button id="export-events" class="link">Export CSV</button
+            ><button id="clear-events" class="link">Clear</button>
+          </div>
+        </div>
+        <div class="event-toolbar">
+          <label for="event-filter">Show</label
+          ><select id="event-filter">
+            <option value="all">All events</option>
+            <option value="Optimizely">Optimizely</option>
+            <option value="Network">Network</option>
+          </select>
+        </div>
+        <div id="events" class="events">
+          <p class="empty">No Optimizely events yet.</p>
+        </div>
+      </section>
+      <section class="card compact-settings">
+        <div class="section-title">
+          <h2>Debugging</h2>
+          <span>Page reload required</span>
+        </div>
+        <label class="popup-setting"
+          ><span class="setting-switch"
+            ><input id="disable-console-logging" type="checkbox" /><span
+              class="switch"
+              aria-hidden="true"
+            ></span></span
+          ><span
+            ><strong>Disable console logging</strong
+            ><small>Suppress Optimizely debug output</small></span
+          ></label
+        ><label class="popup-setting"
+          ><span class="setting-switch"
+            ><input id="disable-optimizely" type="checkbox" /><span
+              class="switch"
+              aria-hidden="true"
+            ></span></span
+          ><span
+            ><strong>Disable Optimizely</strong
+            ><small>Block the Optimizely script on this page</small></span
+          ></label
+        >
+      </section>
+    </main>
+    <footer><span id="message" role="status" aria-live="polite"></span></footer>
+    <div id="api-setup-overlay" class="overlay" hidden>
+      <section
+        class="setup-dialog card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="api-setup-title"
+      >
+        <p class="eyebrow">OPTIONAL</p>
+        <h2 id="api-setup-title">Optimizely API token</h2>
+        <p>
+          An API token enables additional metadata such as status, update time
+          and share links.
+        </p>
+        <p>
+          All page and testing features work without a token. You can add one
+          later through Settings.
+        </p>
+        <p>
+          You can configure and customize your testing cookies later in
+          Settings.
+        </p>
+        <a
+          class="token-link"
+          href="https://app.optimizely.com/v2/profile/api"
+          target="_blank"
+          rel="noopener"
+          >Manage Optimizely API token ↗</a
+        >
+        <label for="api-token">Personal API token</label>
+        <input
+          id="api-token"
+          type="password"
+          autocomplete="off"
+          placeholder="Enter optional token"
+        />
+        <p id="setup-error" class="error"></p>
+        <div class="setup-actions">
+          <button id="skip-api-setup" class="secondary-button">Skip</button
+          ><button id="save-token" class="primary-button">
+            Validate and save token
+          </button>
+        </div>
+      </section>
+    </div>
+    <div id="optimizely-overlay" class="overlay" hidden>
+      <section
+        class="setup-dialog card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="runtime-title"
+      >
+        <p class="eyebrow">OPTIMIZELY STATUS</p>
+        <h2 id="runtime-title">Optimizely was not loaded</h2>
+        <p>
+          Experiments and events can only be shown after Optimizely has loaded
+          on this page.
+        </p>
+        <p>
+          Check that cookies were accepted and the Optimizely script is
+          available.
+        </p>
+        <button id="reload-page" class="primary-button">Reload page</button>
+      </section>
+    </div>
+    <script src="qrcode.js"></script>
+    <script src="popup.js"></script>
+  </body>
 </html>

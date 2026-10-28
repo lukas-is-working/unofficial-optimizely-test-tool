@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.7] - 2026-10-28
+
+### Improved
+
+- Reformatted CSS, HTML and JavaScript for easier maintenance.
+- Removed obsolete styling and documentation remnants.
+- Consolidated accessible info icons and tooltips.
+- Kept popup, settings and setup layouts consistent.
+- Added the initial setup hint for configuring testing cookies in Settings.
+- Preserved the existing security, token and runtime behavior while cleaning up the codebase.
+
 ## [1.0.6] - 2026-10-26
 
 ### Fixed

@@ -6,6 +6,7 @@ let copyMessageTimer;
 let eventFilter = "all";
 const eventOpenedAt = Date.now();
 let experimentPanelState = {};
+let versionClickCount = 0;
 
 function matchesEventFilter(event) {
   if (eventFilter === "new") {
@@ -673,12 +674,23 @@ function render(state) {
         .join("")
     : '<p class="empty">No experiments detected.</p>';
   window.initInfoTooltips?.();
+  document
+    .querySelectorAll(".experiment-chevron")
+    .forEach((chevron) => chevron.remove());
   document.querySelectorAll("[data-experiment-panel]").forEach((panel) =>
     panel.addEventListener("toggle", () => {
       experimentPanelState[panel.dataset.experimentPanel] = panel.open;
       chrome.storage.local.set({ experimentPanelState }).catch(() => {});
     }),
   );
+  document
+    .querySelectorAll(".experiment-summary .experiment-link")
+    .forEach((link) => {
+      link.addEventListener("click", (event) => event.stopPropagation());
+      link.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") event.stopPropagation();
+      });
+    });
   const visibleEvents = state.events.filter(matchesEventFilter);
   $("#event-count").textContent =
     eventFilter === "all"
@@ -957,6 +969,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (currentState) render(currentState);
   });
   $("#retry-api").addEventListener("click", refreshApi);
+  $("#version-easter-egg")?.addEventListener("click", triggerVersionEasterEgg);
   $("#skip-api-setup").addEventListener("click", async () => {
     await chrome.storage.local.set({ apiSetupSkipped: true });
     $("#api-setup-overlay").hidden = true;
@@ -1037,6 +1050,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     chrome.runtime.openOptionsPage(),
   );
 });
+
+function triggerVersionEasterEgg() {
+  versionClickCount += 1;
+  if (versionClickCount < 7) return;
+  versionClickCount = 0;
+
+  const stage = document.createElement("div");
+  stage.className = "easter-egg-stage";
+  stage.setAttribute("aria-live", "polite");
+  const message = document.createElement("span");
+  message.className = "easter-egg-message";
+  message.textContent = "A/B magic unlocked ✨";
+  stage.append(message);
+  document.body.append(stage);
+  const button = $("#version-easter-egg");
+  button?.classList.add("easter-egg-active");
+
+  for (let index = 0; index < 6; index += 1) {
+    const sparkle = document.createElement("span");
+    sparkle.className = "easter-egg-sparkle";
+    sparkle.style.setProperty("--sparkle-angle", `${index * 60}deg`);
+    stage.append(sparkle);
+  }
+
+  window.setTimeout(() => {
+    stage.remove();
+    button?.classList.remove("easter-egg-active");
+  }, 1100);
+}
 
 function exportEvents(events) {
   const fields = [

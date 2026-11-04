@@ -156,7 +156,7 @@ small {
   grid-row: 1;
   width: 7px;
   height: 7px;
-  margin: 2px 0 0 2px;
+  margin: 4px 0 0 2px;
   border-right: 2px solid #242424;
   border-bottom: 2px solid #242424;
   transform: rotate(-45deg);
@@ -169,9 +169,6 @@ small {
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
-}
-.experiment-chevron {
-  display: none;
 }
 .experiment-body {
   padding: 0 0 8px 16px;
@@ -233,8 +230,7 @@ small {
   color: var(--muted);
   font-size: 12px;
 }
-.status-row,
-.event-actions {
+.status-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -247,8 +243,7 @@ small {
   font-size: 11px;
 }
 
-.status-row .link,
-.event-actions .link {
+.status-row .link {
   font-size: 12px;
 }
 .event-count-label {
@@ -474,7 +469,7 @@ small {
 
 .cookie-name,
 .toggle-row small {
-  color: #5d5d5d;
+  color: var(--muted);
 }
 
 .token-link {

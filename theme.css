@@ -1,0 +1,118 @@
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f1f4f2;
+  --muted: #b6c0ba;
+  --line: #454c49;
+  --red-soft: #3a2023;
+  --soft: #171a19;
+  --red-readable: #ff9aa1;
+  --red-readable-hover: #ffd1d5;
+}
+
+:root[data-theme="dark"] body {
+  background: #171a19;
+  color: var(--ink);
+}
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .settings-card,
+:root[data-theme="dark"] .force-link-card {
+  background: #232826;
+  border-color: var(--line);
+  box-shadow: 0 2px 8px #00000030;
+}
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select {
+  border-color: #59635e;
+  background: #1d211f;
+  color: var(--ink);
+}
+:root[data-theme="dark"]
+  button:not(.link):not(.primary-button):not(.danger-button):not(.info-icon) {
+  border-color: #59635e;
+  background: #303733;
+  color: var(--ink);
+}
+:root[data-theme="dark"]
+  button:hover:not(:disabled):not(.danger-button):not(.info-icon) {
+  border-color: #69756e;
+  background: #3b4540;
+}
+:root[data-theme="dark"] .event-group-error {
+  background: #302326;
+}
+:root[data-theme="dark"] .audience-badge,
+:root[data-theme="dark"] .event-count {
+  border-color: #59635e;
+  background: #303733;
+  color: var(--muted);
+}
+:root[data-theme="dark"] .info-icon {
+  border-color: #aab5af;
+  background: #232826;
+  color: var(--ink);
+}
+:root[data-theme="dark"] .info-icon:hover,
+:root[data-theme="dark"] .info-icon:focus-visible {
+  border-color: #fff;
+  background: #f1f4f2;
+  color: #242424;
+}
+:root[data-theme="dark"] .info-icon::after {
+  border-color: #69756e;
+  background: #303733;
+  color: #f1f4f2;
+}
+:root[data-theme="dark"] .header-actions #theme-toggle,
+:root[data-theme="dark"] .theme-toggle,
+:root[data-theme="dark"] .header-actions button {
+  border-color: transparent;
+  background: transparent;
+  color: #f1f4f2;
+}
+:root[data-theme="dark"] .header-actions {
+  border-color: #59635e;
+  background: #303733;
+}
+:root[data-theme="dark"] .header-actions #theme-toggle:hover,
+:root[data-theme="dark"] .theme-toggle:hover,
+:root[data-theme="dark"] .header-actions button:hover {
+  background: #3b4540;
+}
+:root[data-theme="dark"] .easter-egg-message {
+  border-color: #ff687080;
+  background: #303733;
+  color: #f1f4f2;
+  box-shadow: 0 4px 16px #00000040;
+}
+:root[data-theme="dark"] .settings-footer {
+  border-color: #7d3b42;
+  background: #302326;
+}
+:root[data-theme="dark"] .settings-card .danger-button {
+  border-color: #e58b93;
+  background: #4a252a;
+  color: #ffd9dc;
+}
+:root[data-theme="dark"] .settings-card .danger-button:hover {
+  border-color: #ffabb2;
+  background: #613036;
+  color: #fff;
+}
+:root[data-theme="dark"] .experiment-link,
+:root[data-theme="dark"] .experiment-link:visited,
+:root[data-theme="dark"] .status-row .link,
+:root[data-theme="dark"] .event-toolbar .link,
+:root[data-theme="dark"] .event strong {
+  color: var(--red-readable) !important;
+}
+:root[data-theme="dark"] .experiment-link:hover,
+:root[data-theme="dark"] .experiment-link:focus-visible,
+:root[data-theme="dark"] .status-row .link:hover,
+:root[data-theme="dark"] .event-toolbar .link:hover {
+  color: var(--red-readable-hover) !important;
+  text-decoration: underline;
+}
+:root[data-theme="dark"] .experiment-summary::before,
+:root[data-theme="dark"] .event-group summary::before {
+  border-color: #f1f4f2;
+}

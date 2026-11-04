@@ -58,6 +58,7 @@ body.options-page {
 }
 .options-page .options-header {
   display: grid;
+  position: relative;
   width: 100%;
   justify-items: center;
   padding: 36px 28px 32px;
@@ -503,4 +504,37 @@ body.options-page {
   .cookie-setting {
     grid-template-columns: 1fr;
   }
+}
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  min-width: 38px;
+  min-height: 38px;
+  border: 1px solid #ffffff;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--red-dark);
+  cursor: pointer;
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+.theme-toggle:hover {
+  border-color: #ffe1e3;
+  background: #ffe1e3;
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.theme-toggle-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }

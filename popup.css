@@ -30,7 +30,7 @@ body {
   background: #f7f7f7;
 }
 header {
-  padding: 16px 18px 14px;
+  padding: 13px 16px 12px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -43,7 +43,8 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: 20px;
+  font-size: 18px;
+  line-height: 1.15;
   letter-spacing: -0.03em;
 }
 h2 {
@@ -56,9 +57,9 @@ h2 {
   min-width: 0;
 }
 .header-brand img {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
   border-radius: 9px;
 }
 .eyebrow {
@@ -69,7 +70,11 @@ h2 {
 }
 .header-actions {
   display: flex;
-  gap: 2px;
+  gap: 1px;
+  padding: 2px;
+  border: 1px solid #fff;
+  border-radius: 9px;
+  background: #fff;
 }
 header button {
   border: 0;
@@ -182,12 +187,104 @@ input:focus {
 }
 footer {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
   padding: 0 16px 14px;
   color: var(--muted);
 }
 #message {
   font-size: 11px;
+}
+.version-label {
+  border: 0;
+  padding: 4px 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+}
+.version-label:hover {
+  color: var(--red);
+}
+.version-label.easter-egg-active {
+  animation: version-glow 800ms ease;
+}
+.easter-egg-stage {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  color: var(--red);
+  font-size: 16px;
+  font-weight: 700;
+  text-shadow: 0 2px 10px #e3061340;
+  animation: easter-egg-message 1.1s ease both;
+}
+.easter-egg-message {
+  position: relative;
+  z-index: 1;
+  padding: 9px 14px;
+  border: 1px solid #e3061366;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 4px 16px #24242426;
+}
+.easter-egg-sparkle {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: easter-egg-sparkle 800ms ease-out both;
+  transform: rotate(var(--sparkle-angle)) translateY(-38px);
+}
+@keyframes version-glow {
+  50% {
+    color: var(--red);
+    text-shadow: 0 0 12px #e3061380;
+    transform: scale(1.05);
+  }
+}
+@keyframes easter-egg-message {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  25%,
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+@keyframes easter-egg-sparkle {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--sparkle-angle)) translateY(-12px) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--sparkle-angle)) translateY(-58px) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .version-label.easter-egg-active,
+  .easter-egg-stage,
+  .easter-egg-sparkle {
+    animation: none;
+  }
+  .easter-egg-stage {
+    opacity: 1;
+  }
 }
 .cookie-modes {
   display: grid;
@@ -337,12 +434,34 @@ button:disabled {
   image-rendering: pixelated;
 }
 .header-actions button {
-  min-width: 34px;
-  min-height: 34px;
-  padding: 4px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 3px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--red-dark);
+  font-size: 22px;
+}
+.header-actions button:hover {
+  background: #ffe1e3;
+}
+.header-actions #theme-toggle {
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+.theme-toggle-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 .header-actions button:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--red-dark);
   outline-offset: 2px;
 }
 .link:focus-visible,

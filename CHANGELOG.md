@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.0] - 2026-11-04
+
+### Added
+
+- Added a manually selectable dark mode for the popup and Settings page.
+- Added system-theme detection as the initial theme choice.
+- Added a small popup Easter egg with reduced-motion support.
+
+### Improved
+
+- Unified header action styling across light and dark themes.
+- Improved dark-mode contrast for chevrons, links, event actions, buttons and cookie names.
+- Improved experiment-card hierarchy and preserved the Optimizely link beside the experiment name.
+- Improved tooltip, reset, cookie-control and event-log accessibility.
+- Removed obsolete event and tooltip styling remnants.
+
+### Fixed
+
+- Prevented clicking the experiment link from toggling the disclosure accidentally.
+- Added a fallback when theme storage cannot be read.
+
 ## [1.1.1] - 2026-11-04
 
 ### Fixed

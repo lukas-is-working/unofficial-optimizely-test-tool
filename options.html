@@ -6,19 +6,29 @@
     <title>Unofficial Optimizely Test Tool Settings</title>
     <link rel="stylesheet" href="options.css" />
     <link rel="stylesheet" href="info-tooltip.css" />
+    <link rel="stylesheet" href="theme.css" />
   </head>
   <body class="options-page">
     <header class="options-header">
       <div class="options-brand">
         <img src="icons/icon-128.png" alt="" />
         <div>
-          <h1>Unofficial Optimizely Test Tool</h1>
+          <h1>Unofficial<br />Optimizely Test Tool</h1>
           <p class="header-subtitle">Settings and credentials</p>
           <p class="brand-disclaimer">
             Not affiliated with or endorsed by Optimizely
           </p>
         </div>
       </div>
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        type="button"
+        title="Toggle dark mode"
+        aria-label="Toggle dark mode"
+      >
+        ☾
+      </button>
     </header>
     <main class="options-main">
       <section class="settings-card settings-card-token">
@@ -188,6 +198,7 @@
       </div>
     </main>
     <script src="info-tooltip.js"></script>
+    <script src="theme.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="popup.css" />
     <link rel="stylesheet" href="readability.css" />
     <link rel="stylesheet" href="setup.css" />
+    <link rel="stylesheet" href="info-tooltip.css" />
   </head>
   <body>
     <header>
@@ -97,19 +98,32 @@
           <h2>
             Event log <span id="event-count" class="event-count-label">0</span>
           </h2>
-          <div class="event-actions">
-            <button id="pause-events" class="link">Pause</button
-            ><button id="export-events" class="link">Export CSV</button
-            ><button id="clear-events" class="link">Clear</button>
-          </div>
         </div>
         <div class="event-toolbar">
-          <label for="event-filter">Show</label
-          ><select id="event-filter">
-            <option value="all">All events</option>
-            <option value="Optimizely">Optimizely</option>
-            <option value="Network">Network</option>
-          </select>
+          <span class="event-filter-group"
+            ><label for="event-filter">Show</label
+            ><select id="event-filter">
+              <option value="all">All events</option>
+              <option value="Optimizely">Optimizely</option>
+              <option value="Network">Network</option>
+              <option value="new">New since opened</option>
+            </select></span
+          >
+          <button id="pause-events" class="link">Pause</button>
+          <span class="event-export-actions"
+            ><button id="export-events" class="link">Export CSV</button
+            ><button
+              id="clear-events"
+              class="link icon-action"
+              title="Clear event log"
+              aria-label="Clear event log"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path
+                  d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13M10 11v6M14 11v6"
+                ></path>
+              </svg></button
+          ></span>
         </div>
         <div id="events" class="events">
           <p class="empty">No Optimizely events yet.</p>
@@ -209,6 +223,7 @@
       </section>
     </div>
     <script src="qrcode.js"></script>
+    <script src="info-tooltip.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

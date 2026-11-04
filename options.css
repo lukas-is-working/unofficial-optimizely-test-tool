@@ -232,11 +232,26 @@ body.options-page {
   gap: 6px;
 }
 .cookie-setting .remove-cookie {
-  width: 86px;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
   min-height: 42px;
-  padding: 9px 12px;
-  align-self: end;
-  white-space: nowrap;
+  padding: 8px;
+  justify-self: end;
+}
+.cookie-setting .remove-cookie:hover {
+  border-color: #a3000b;
+  background: #ffe1e3;
+  color: #a3000b;
+}
+.cookie-setting .remove-cookie svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 .field-group {
   display: grid;

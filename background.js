@@ -197,7 +197,7 @@ async function fetchOptimizelyMetadata(
   const cacheKey = `${projectId}:${experimentIds.slice().sort().join(",")}`;
   const cached = apiCache.get(cacheKey);
   if (!forceRefresh && cached && Date.now() - cached.createdAt < 5 * 60 * 1000)
-    return cached.value;
+    return { ...cached.value, fromCache: true, cachedAt: cached.createdAt };
 
   const headers = {
     Authorization: `Bearer ${apiToken}`,
@@ -264,6 +264,13 @@ async function fetchOptimizelyMetadata(
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "clearPageEvents" && Number.isInteger(message.tabId)) {
+    chrome.storage.session
+      .remove(`state:${message.tabId}`)
+      .then(() => sendResponse({ ok: true }))
+      .catch(() => sendResponse({ ok: false }));
+    return true;
+  }
   if (message.type === "pageState" && sender.tab?.id) {
     chrome.storage.session
       .get(`state:${sender.tab.id}`)

@@ -1,0 +1,62 @@
+.info-icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  min-height: 17px;
+  margin-left: 3px;
+  padding: 0 0 1px;
+  border: 1px solid #525252;
+  border-radius: 50%;
+  background: #fff;
+  color: #242424;
+  font:
+    700 11px/16px Arial,
+    sans-serif;
+  vertical-align: 2px;
+  cursor: help;
+}
+.info-icon:hover,
+.info-icon:focus-visible {
+  border-color: #242424;
+  background: #242424;
+  color: #fff;
+}
+.info-icon::after {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 50%;
+  width: min(250px, calc(100vw - 32px));
+  padding: 8px 10px;
+  border: 1px solid #242424;
+  border-radius: 7px;
+  background: #242424;
+  color: #fff;
+  content: attr(data-tooltip);
+  font:
+    400 11px/1.35 Inter,
+    system-ui,
+    sans-serif;
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -2px);
+  transition:
+    opacity 100ms ease,
+    transform 100ms ease;
+}
+.info-icon:hover::after,
+.info-icon:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.info-tooltip-description {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

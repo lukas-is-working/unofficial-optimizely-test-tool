@@ -4,9 +4,16 @@ let currentState;
 let eventsPaused = false;
 let copyMessageTimer;
 let eventFilter = "all";
+const eventOpenedAt = Date.now();
 let experimentPanelState = {};
 
 function matchesEventFilter(event) {
+  if (eventFilter === "new") {
+    const timestamp = event.timestamp
+      ? Number(event.timestamp) || Date.parse(event.timestamp)
+      : NaN;
+    return Number.isFinite(timestamp) && timestamp >= eventOpenedAt;
+  }
   if (eventFilter === "all") return true;
   if (eventFilter === "Optimizely")
     return event.source === "Optimizely" || event.source === "Optimizely queue";
@@ -192,6 +199,7 @@ async function enrichWithApi(state) {
     });
   } catch (error) {
     state.apiPending = false;
+    state.apiStatus = "API unavailable";
     render(state);
     $("#api-status").textContent = `API error: ${error.message}`;
     return;
@@ -199,6 +207,11 @@ async function enrichWithApi(state) {
   if (!result?.ok) {
     state.apiConfigured = false;
     state.apiPending = false;
+    state.apiStatus = /403|permission|access/i.test(result?.error || "")
+      ? "No permission"
+      : /401|token/i.test(result?.error || "")
+        ? "Token not configured or invalid"
+        : "API unavailable";
     render(state);
     $("#api-status").textContent =
       result?.error === "No API token configured"
@@ -224,6 +237,10 @@ async function enrichWithApi(state) {
   state.metadata.apiLoaded = true;
   state.apiConfigured = true;
   state.apiPending = false;
+  state.apiStatus = result.fromCache
+    ? "Metadata loaded from cache"
+    : "Metadata loaded";
+  state.apiFetchedAt = result.fromCache ? result.cachedAt : Date.now();
   render(state);
   $("#api-status").textContent = result.experiments.length
     ? `API: Metadata loaded (${result.experiments.length})`
@@ -245,6 +262,7 @@ async function refreshApi() {
     });
   } catch (error) {
     currentState.apiPending = false;
+    currentState.apiStatus = "API unavailable";
     render(currentState);
     $("#api-status").textContent = `API error: ${error.message}`;
     return;
@@ -252,6 +270,11 @@ async function refreshApi() {
   if (!result?.ok) {
     currentState.apiConfigured = false;
     currentState.apiPending = false;
+    currentState.apiStatus = /403|permission|access/i.test(result?.error || "")
+      ? "No permission"
+      : /401|token/i.test(result?.error || "")
+        ? "Token invalid"
+        : "API unavailable";
     render(currentState);
     $("#api-status").textContent = result?.error || "API unavailable";
     return;
@@ -267,6 +290,10 @@ async function refreshApi() {
   );
   currentState.metadata.apiLoaded = true;
   currentState.apiPending = false;
+  currentState.apiStatus = result.fromCache
+    ? "Metadata loaded from cache"
+    : "Metadata loaded";
+  currentState.apiFetchedAt = result.fromCache ? result.cachedAt : Date.now();
   render(currentState);
 }
 
@@ -473,7 +500,7 @@ function buildForceLink(variation) {
 
 function showCopied(button, originalText) {
   if (!button) return;
-  button.textContent = "Kopiert";
+  button.textContent = "Copied";
   button.classList.add("copied");
   clearTimeout(button._copiedTimer);
   button._copiedTimer = setTimeout(() => {
@@ -488,8 +515,10 @@ async function copyText(
   button,
   originalText = "Kopieren",
 ) {
+  let copied = false;
   try {
     await navigator.clipboard.writeText(text);
+    copied = true;
   } catch (_) {
     const textarea = document.createElement("textarea");
     textarea.value = text;
@@ -497,8 +526,12 @@ async function copyText(
     textarea.style.opacity = "0";
     document.body.appendChild(textarea);
     textarea.select();
-    document.execCommand("copy");
+    copied = document.execCommand("copy");
     textarea.remove();
+  }
+  if (!copied) {
+    setMessage("Copy failed");
+    return;
   }
   showCopied(button, originalText);
   setMessage(successMessage);
@@ -523,21 +556,29 @@ function render(state) {
   $("#status").textContent = state.experiments.length
     ? `${state.experiments.length} detected`
     : "None detected";
-  $("#runtime-status").textContent = state.runtimePending
-    ? "Loading ..."
+  const runtimeStatus = $("#runtime-status");
+  runtimeStatus.textContent = state.runtimePending
+    ? "Runtime: Loading ..."
     : state.optimizelyLoaded
-      ? "Runtime active"
-      : "Runtime not loaded";
-  $("#experiment-status").textContent = state.runtimePending
+      ? "Runtime: Active"
+      : "Runtime: Not loaded";
+  runtimeStatus.className = `status-badge ${state.runtimePending ? "is-loading" : state.optimizelyLoaded ? "is-success" : "is-error"}`;
+
+  const experimentStatus = $("#experiment-status");
+  experimentStatus.textContent = state.runtimePending
     ? "Experiments: Loading ..."
     : `Experiments: ${state.experiments.length ? `${state.experiments.length} active` : "None active"}`;
-  $("#api-status").textContent = state.apiPending
-    ? "API: Loading ..."
+  experimentStatus.className = `status-badge ${state.runtimePending ? "is-loading" : state.experiments.length ? "is-success" : "is-neutral"}`;
+
+  const apiStatus = $("#api-status");
+  const apiLabel = state.apiPending
+    ? "Loading ..."
     : state.apiSkipped
-      ? "API: not required"
-      : state.metadata.apiLoaded
-        ? "API: Metadata loaded"
-        : "API: not connected";
+      ? "Not required"
+      : state.apiStatus ||
+        (state.metadata.apiLoaded ? "Metadata loaded" : "Not connected");
+  apiStatus.textContent = `API: ${apiLabel}`;
+  apiStatus.className = `status-badge ${state.apiPending ? "is-loading" : state.metadata.apiLoaded ? "is-success" : state.apiSkipped ? "is-neutral" : "is-error"}`;
   $("#api-status").setAttribute(
     "title",
     state.apiConfigured === true
@@ -558,6 +599,12 @@ function render(state) {
   $("#metadata").innerHTML = [
     ["Snippet revision", valueOrUnavailable(metadata.snippetRevision)],
     ["Last updated", apiValue(formatDate(metadata.lastUpdateTime))],
+    [
+      "API checked",
+      state.apiPending
+        ? "Loading ..."
+        : valueOrUnavailable(formatDate(state.apiFetchedAt)),
+    ],
     ["Project ID", valueOrUnavailable(metadata.projectId)],
     [
       "Active pages on this page",
@@ -592,21 +639,30 @@ function render(state) {
           const options = variants
             .map(
               (variant) =>
-                `<option value="${escapeHtml(variant.id)}" ${variant.id === experiment.variationId ? "selected" : ""}>${variant.id === experiment.variationId ? "Aktuell: " : ""}${escapeHtml(variant.name)}</option>`,
+                `<option value="${escapeHtml(variant.id)}" ${variant.id === experiment.variationId ? "selected" : ""}>${variant.id === experiment.variationId ? "Current: " : ""}${escapeHtml(variant.name)}</option>`,
             )
             .join("");
           const experimentUrl = metadata.projectId
             ? `https://app.optimizely.com/v2/projects/${encodeURIComponent(metadata.projectId)}/experiments/${encodeURIComponent(experiment.id)}`
             : "";
-          const experimentTitle = experimentUrl
-            ? `<a class="experiment-link" href="${experimentUrl}" target="_blank" rel="noopener">${escapeHtml(experiment.name)} <span class="external-link-icon" aria-label="Open experiment in Optimizely" title="Open in Optimizely">↗</span></a>`
-            : escapeHtml(experiment.name);
-          const forceLink = buildForceLink(
-            variants.find((variant) => variant.id === experiment.variationId) ||
-              variants[0],
-          );
           const apiDetails =
             state.apiConfigured === false ? " api-unavailable" : "";
+          const experimentStatus = experiment.status || "Available with API";
+          const experimentStatusClass = /running|active|live/i.test(
+            experimentStatus,
+          )
+            ? "is-success"
+            : /draft|paused|archived/i.test(experimentStatus)
+              ? "is-warning"
+              : "is-neutral";
+          const currentVariant =
+            variants.find((variant) => variant.id === experiment.variationId) ||
+            variants[0];
+          const summaryStatus = `<span class="status-badge ${experimentStatusClass}${apiDetails}">Status: ${escapeHtml(experimentStatus)}</span>`;
+          const experimentTitle = experimentUrl
+            ? `<a class="experiment-link" href="${experimentUrl}" target="_blank" rel="noopener">${escapeHtml(experiment.name)} <span class="external-link-icon" aria-hidden="true">↗</span></a>${summaryStatus}`
+            : `${escapeHtml(experiment.name)}${summaryStatus}`;
+          const forceLink = buildForceLink(currentVariant);
           const audienceBadges = experiment.audiences?.length
             ? `<div class="audience-section"><strong class="audience-title">Audiences</strong><div class="audience-badges" aria-label="Audiences">${experiment.audiences.map((audience) => `<span class="audience-badge">${escapeHtml(audience.name || audience.id)}</span>`).join("")}</div></div>`
             : "";
@@ -615,16 +671,23 @@ function render(state) {
             ? "Share links are provided through API metadata."
             : "Opens this variant directly without the extension.";
           const isOpen = experimentPanelState[String(experiment.id)] !== false;
-          return `<details class="experiment" data-experiment-panel="${escapeHtml(experiment.id)}"${isOpen ? " open" : ""}><summary class="experiment-summary"><span class="experiment-name">${experimentTitle}<small class="experiment-id">Experiment ID: ${escapeHtml(experiment.id)}</small></span><span class="experiment-chevron" aria-hidden="true">⌄</span></summary><div class="experiment-body">${audienceBadges}<small class="experiment-status${apiDetails}">Status: ${escapeHtml(experiment.status || "Available with API")}</small><div class="variant-row"><select data-experiment="${escapeHtml(experiment.id)}">${options}</select><button class="copy" data-copy="${escapeHtml(experiment.id)}" title="Copy JavaScript snippet for the selected variant">Copy variant snippet</button></div><small class="variant-id">Variant ID: ${escapeHtml(experiment.variationId || "unknown")}</small><small class="experiment-updated${apiDetails}">Last updated: ${escapeHtml(formatDate(experiment.lastUpdated) || "Available with API")}</small><div class="force-link-card${linkDisabled ? " api-disabled" : ""}"><div class="force-link-title"><strong>Variant share link</strong><button class="info-icon" type="button" title="This link only works for the current page. Generate a new link when testing another page." aria-label="This link only works for the current page. Generate a new link when testing another page.">i</button></div><small>${linkHint}</small><div class="force-link-actions"><button class="copy-force-link" data-force-link-copy="${escapeHtml(experiment.id)}" ${linkDisabled ? "disabled" : ""}>Copy link</button><button class="show-qr" data-qr="${escapeHtml(experiment.id)}" ${linkDisabled ? "disabled" : ""}>QR code</button></div><input type="hidden" value="${escapeHtml(forceLink)}" data-force-link="${escapeHtml(experiment.id)}"><img class="force-qr" data-qr-image="${escapeHtml(experiment.id)}" alt="QR code for the variant" hidden></div></div></details>`;
+          return `<details class="experiment" data-experiment-panel="${escapeHtml(experiment.id)}"${isOpen ? " open" : ""}><summary class="experiment-summary"><span class="experiment-name">${experimentTitle}<small class="experiment-id">Experiment ID: ${escapeHtml(experiment.id)}</small></span><span class="experiment-chevron" aria-hidden="true">⌄</span></summary><div class="experiment-body">${audienceBadges}<span class="experiment-status status-badge ${experimentStatusClass}${apiDetails}">Status: ${escapeHtml(experimentStatus)}</span><div class="variant-row"><select data-experiment="${escapeHtml(experiment.id)}">${options}</select><button class="copy" data-copy="${escapeHtml(experiment.id)}" title="Copy JavaScript snippet for the selected variant">Copy variant snippet</button></div><small class="variant-id">Variant ID: ${escapeHtml(experiment.variationId || "unknown")}</small><small class="experiment-updated${apiDetails}">Last updated: ${escapeHtml(formatDate(experiment.lastUpdated) || "Available with API")}</small><div class="force-link-card${linkDisabled ? " api-disabled" : ""}"><div class="force-link-title"><strong>Variant share link</strong><button class="info-icon" type="button" title="This link only works for the current page. Generate a new link when testing another page." aria-label="This link only works for the current page. Generate a new link when testing another page.">i</button></div><small>${linkHint}</small><div class="force-link-actions"><button class="copy-force-link" data-force-link-copy="${escapeHtml(experiment.id)}" ${linkDisabled ? "disabled" : ""}>Copy link</button><button class="show-qr" data-qr="${escapeHtml(experiment.id)}" ${linkDisabled ? "disabled" : ""}>QR code</button></div><input type="hidden" value="${escapeHtml(forceLink)}" data-force-link="${escapeHtml(experiment.id)}"><img class="force-qr" data-qr-image="${escapeHtml(experiment.id)}" alt="QR code for the variant" hidden></div></div></details>`;
         })
         .join("")
     : '<p class="empty">No experiments detected.</p>';
-  document.querySelectorAll(".info-icon[title]").forEach((button) => {
-    button.dataset.tooltip =
-      button.title ||
-      "This link only works for the current page. Generate a new link when testing another page.";
-    button.removeAttribute("title");
-  });
+  window.initInfoTooltips?.();
+  document
+    .querySelectorAll(".experiment-summary .experiment-link")
+    .forEach((link) => {
+      const body = link
+        .closest(".experiment")
+        ?.querySelector(".experiment-body");
+      if (!body) return;
+      const row = document.createElement("div");
+      row.className = "experiment-link-row";
+      row.append(link);
+      body.prepend(row);
+    });
   document.querySelectorAll("[data-experiment-panel]").forEach((panel) =>
     panel.addEventListener("toggle", () => {
       experimentPanelState[panel.dataset.experimentPanel] = panel.open;
@@ -744,7 +807,16 @@ function renderEventGroups(events) {
         : event.eventName
           ? "Optimizely-Event"
           : "";
-      const title = `${escapeHtml(event.source)} · ${escapeHtml(event.method)}`;
+      const sourceLabel =
+        event.source === "Optimizely network" ? "Network" : "Optimizely";
+      const hasError = groupedEvents.some(
+        (item) =>
+          Boolean(item.error) ||
+          Number(item.statusCode) >= 400 ||
+          Number(item.status) >= 400,
+      );
+      const lastTimestamp = groupedEvents[0]?.timestamp;
+      const title = `${escapeHtml(event.method)}`;
       const labels = [
         event.eventName && `${eventLabel}: ${escapeHtml(event.eventName)}`,
         event.apiName &&
@@ -761,7 +833,7 @@ function renderEventGroups(events) {
             `<div class="event-occurrence"><time>${escapeHtml(formatDate(item.timestamp) || item.timestamp || "")}</time><pre>${escapeHtml(JSON.stringify(item.payload || item.url || "", null, 2))}</pre></div>`,
         )
         .join("");
-      return `<details class="event-group"><summary><span><strong>${title}</strong>${labels ? ` · ${labels}` : ""}</span><span class="event-count">${groupedEvents.length}×</span></summary><div class="event-group-body">${payloads}</div></details>`;
+      return `<details class="event-group${hasError ? " event-group-error" : ""}"><summary><span class="event-summary-main"><span class="event-source-badge ${sourceLabel === "Network" ? "network" : "optimizely"}">${sourceLabel}</span><strong>${title}</strong>${labels ? ` <span class="event-summary-labels">· ${labels}</span>` : ""}</span><span class="event-summary-meta"><time>${escapeHtml(formatDate(lastTimestamp) || "")}</time><span class="event-count">${groupedEvents.length}×</span></span></summary><div class="event-group-body">${payloads}</div></details>`;
     })
     .join("");
 }
@@ -862,6 +934,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("#clear-events").addEventListener("click", async () => {
     if (!isWebTab()) return;
     try {
+      await chrome.runtime.sendMessage({
+        type: "clearPageEvents",
+        tabId: tab.id,
+      });
       await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         world: "MAIN",

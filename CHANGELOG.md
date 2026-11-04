@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.1.0] - 2026-11-04
+
+### Added
+
+- Unified accessible info tooltips for the popup and Settings page.
+- Clearer API status badges and API check timestamps.
+- More compact experiment cards with status and current experiment context in the summary.
+- Event source badges, event counts, latest timestamps and a “new since opened” filter.
+- Clearer event toolbar with grouped actions and an icon-only clear action.
+- Reset confirmation that explains which settings and stored data will be removed or restored.
+
+### Fixed
+
+- Clearing the event log now also removes preserved events from session storage.
+- Event groups show their newest occurrence as the summary timestamp.
+- Copy actions no longer report success when the clipboard fallback fails.
+- Cookie removal controls have contextual accessible labels.
+- Removed obsolete event and tooltip styles after the UI redesign.
+
 ## [1.0.7] - 2026-10-28
 
 ### Improved

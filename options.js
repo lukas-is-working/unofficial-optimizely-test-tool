@@ -1,4 +1,5 @@
 const input = document.querySelector("#api-token");
+window.initInfoTooltips?.();
 const status = document.querySelector("#status");
 const autosaveStatus = document.querySelector("#autosave-status");
 const removeTokenButton = document.querySelector("#remove-api-token");
@@ -21,10 +22,7 @@ const assistantDefaults = {
 let testingCookies = [];
 let cookieSaveTimer;
 chrome.storage.local
-  .get({
-    apiToken: "",
-    testingCookies: [],
-  })
+  .get({ apiToken: "", testingCookies: [] })
   .then(({ apiToken, testingCookies: storedCookies }) => {
     originalToken = apiToken;
     input.value = apiToken;
@@ -41,7 +39,7 @@ function renderCookieSettings() {
   cookieSettings.innerHTML = testingCookies
     .map(
       (cookie, index) =>
-        `<div class="cookie-setting" data-cookie-index="${index}"><label>Label<input class="cookie-label" type="text" value="${escapeHtml(cookie.label)}" placeholder="Test cookie"></label><label>Cookie name<input class="cookie-name-input" type="text" value="${escapeHtml(cookie.name)}" placeholder="Cookie name"></label><button class="remove-cookie danger-button" type="button">Remove</button></div>`,
+        `<div class="cookie-setting" data-cookie-index="${index}"><label>Label<input class="cookie-label" type="text" value="${escapeHtml(cookie.label)}" placeholder="Test cookie label"></label><label>Cookie name<input class="cookie-name-input" type="text" value="${escapeHtml(cookie.name)}" placeholder="Technical cookie name"></label><button class="remove-cookie danger-button icon-action" type="button" aria-label="Remove cookie ${escapeHtml(cookie.label || cookie.name || index + 1)}"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13M10 11v6M14 11v6"></path></svg></button></div>`,
     )
     .join("");
   cookieSettings
@@ -57,6 +55,7 @@ function renderCookieSettings() {
       scheduleSave();
     }),
   );
+  window.initInfoTooltips?.(cookieSettings);
 }
 
 function updateCookieSettings() {
@@ -192,11 +191,21 @@ removeTokenButton?.addEventListener("click", async () => {
 });
 
 resetSettingsButton?.addEventListener("click", async () => {
-  if (!window.confirm("Reset all tool settings?")) return;
+  if (
+    !window.confirm(
+      "Reset all settings?\n\n" +
+        "• The API token will be removed.\n" +
+        "• Testing cookies will be restored to their default values.\n" +
+        "• UI states and snippet options will be reset.\n\n" +
+        "This action cannot be undone.",
+    )
+  )
+    return;
   await chrome.storage.local.remove([
     "apiToken",
     "apiTokenValidated",
     "apiTokenValidationScope",
+    "experimentPanelState",
   ]);
   await chrome.storage.local.set({
     apiSetupSkipped: false,

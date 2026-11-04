@@ -41,15 +41,18 @@ small {
 }
 
 .experiment-link {
-  color: var(--red);
-  text-decoration: none;
+  color: var(--red) !important;
+  text-decoration: none !important;
 }
 
-.experiment-link:hover {
-  text-decoration: underline;
+.experiment-link:visited {
+  color: var(--red) !important;
 }
-.experiment-link-row {
-  margin-bottom: 6px;
+
+.experiment-link:hover,
+.experiment-link:focus-visible {
+  color: var(--red-dark) !important;
+  text-decoration: underline !important;
 }
 
 .external-link-icon {

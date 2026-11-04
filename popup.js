@@ -201,7 +201,6 @@ async function enrichWithApi(state) {
     state.apiPending = false;
     state.apiStatus = "API unavailable";
     render(state);
-    $("#api-status").textContent = `API error: ${error.message}`;
     return;
   }
   if (!result?.ok) {
@@ -213,10 +212,6 @@ async function enrichWithApi(state) {
         ? "Token not configured or invalid"
         : "API unavailable";
     render(state);
-    $("#api-status").textContent =
-      result?.error === "No API token configured"
-        ? "API: Token not configured"
-        : `API: ${result?.error || "unavailable"}`;
     return;
   }
   const records = new Map(
@@ -237,9 +232,11 @@ async function enrichWithApi(state) {
   state.metadata.apiLoaded = true;
   state.apiConfigured = true;
   state.apiPending = false;
-  state.apiStatus = result.fromCache
-    ? "Metadata loaded from cache"
-    : "Metadata loaded";
+  state.apiStatus = result.experiments.length
+    ? result.fromCache
+      ? `Metadata loaded from cache (${result.experiments.length})`
+      : `Metadata loaded (${result.experiments.length})`
+    : "API reachable, but no active experiment found";
   state.apiFetchedAt = result.fromCache ? result.cachedAt : Date.now();
   render(state);
   $("#api-status").textContent = result.experiments.length
@@ -264,7 +261,6 @@ async function refreshApi() {
     currentState.apiPending = false;
     currentState.apiStatus = "API unavailable";
     render(currentState);
-    $("#api-status").textContent = `API error: ${error.message}`;
     return;
   }
   if (!result?.ok) {
@@ -276,7 +272,6 @@ async function refreshApi() {
         ? "Token invalid"
         : "API unavailable";
     render(currentState);
-    $("#api-status").textContent = result?.error || "API unavailable";
     return;
   }
   const records = new Map(
@@ -290,9 +285,11 @@ async function refreshApi() {
   );
   currentState.metadata.apiLoaded = true;
   currentState.apiPending = false;
-  currentState.apiStatus = result.fromCache
-    ? "Metadata loaded from cache"
-    : "Metadata loaded";
+  currentState.apiStatus = result.experiments.length
+    ? result.fromCache
+      ? `Metadata loaded from cache (${result.experiments.length})`
+      : `Metadata loaded (${result.experiments.length})`
+    : "API reachable, but no active experiment found";
   currentState.apiFetchedAt = result.fromCache ? result.cachedAt : Date.now();
   render(currentState);
 }
@@ -676,18 +673,6 @@ function render(state) {
         .join("")
     : '<p class="empty">No experiments detected.</p>';
   window.initInfoTooltips?.();
-  document
-    .querySelectorAll(".experiment-summary .experiment-link")
-    .forEach((link) => {
-      const body = link
-        .closest(".experiment")
-        ?.querySelector(".experiment-body");
-      if (!body) return;
-      const row = document.createElement("div");
-      row.className = "experiment-link-row";
-      row.append(link);
-      body.prepend(row);
-    });
   document.querySelectorAll("[data-experiment-panel]").forEach((panel) =>
     panel.addEventListener("toggle", () => {
       experimentPanelState[panel.dataset.experimentPanel] = panel.open;

@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.1] - 2026-11-04
+
+### Fixed
+
+- Clear now removes preserved event-log data from session storage.
+- Event groups show the newest event timestamp.
+- API status remains consistent after loading, cache reads and errors.
+- Clipboard failures are no longer reported as successful copies.
+- Experiment links retain their original red styling and hover behavior.
+- Reset confirmation now explains all affected settings and restores an empty cookie configuration.
+- Cookie removal buttons use contextual accessible labels.
+
+### Improved
+
+- Added unified accessible info tooltips for popup and Settings controls.
+- Added event source badges, count bubbles and a “new since opened” filter.
+- Improved experiment-card hierarchy and event-toolbar layout.
+
 ## [1.1.0] - 2026-11-04
 
 ### Added

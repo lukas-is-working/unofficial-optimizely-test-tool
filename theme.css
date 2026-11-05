@@ -85,15 +85,17 @@
   box-shadow: 0 4px 16px #00000040;
 }
 :root[data-theme="dark"] .settings-footer {
-  border-color: #7d3b42;
-  background: #302326;
+  border-color: var(--line);
+  background: #232826;
 }
-:root[data-theme="dark"] .settings-card .danger-button {
+:root[data-theme="dark"] .settings-card .danger-button,
+:root[data-theme="dark"] .settings-footer .danger-button {
   border-color: #e58b93;
   background: #4a252a;
   color: #ffd9dc;
 }
-:root[data-theme="dark"] .settings-card .danger-button:hover {
+:root[data-theme="dark"] .settings-card .danger-button:hover,
+:root[data-theme="dark"] .settings-footer .danger-button:hover {
   border-color: #ffabb2;
   background: #613036;
   color: #fff;

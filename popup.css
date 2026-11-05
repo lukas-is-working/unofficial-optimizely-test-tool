@@ -87,9 +87,17 @@ header button:hover {
   background: #ffffff1a;
 }
 main {
+  position: relative;
   padding: 12px;
   display: grid;
   gap: 10px;
+}
+#optimizely-overlay {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
 }
 .card {
   background: #fff;
@@ -169,6 +177,9 @@ input:focus {
 }
 .copy {
   padding: 7px 9px;
+}
+.variant-row .copy {
+  flex: 0 0 145px;
 }
 .empty {
   color: var(--muted);
@@ -405,6 +416,9 @@ footer {
 .force-link-card button {
   font-size: 11px;
 }
+.force-link-actions button {
+  min-width: 0;
+}
 .copy.copied,
 .copy-force-link.copied,
 .copy-cookie.copied {
@@ -419,6 +433,27 @@ footer {
 button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
+}
+details > .experiment-body,
+.event-group[open] .event-group-body {
+  animation: disclosure-reveal 160ms ease both;
+  transform-origin: top;
+}
+@keyframes disclosure-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  details > .experiment-body,
+  .event-group[open] .event-group-body {
+    animation: none;
+  }
 }
 .setup-actions {
   display: flex;

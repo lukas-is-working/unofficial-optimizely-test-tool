@@ -43,6 +43,17 @@ const setMessage = (text) => {
     $("#message").textContent = "";
   }, 2500);
 };
+
+async function reloadCurrentTab() {
+  if (currentState) {
+    currentState.runtimePending = true;
+    currentState.optimizelyLoaded = false;
+    render(currentState);
+  }
+  await chrome.tabs.reload(tab.id);
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  await getState();
+}
 let cookieNames = [];
 let configuredCookies = [];
 
@@ -747,6 +758,16 @@ function render(state) {
   );
   document.querySelectorAll("[data-force-link-copy]").forEach((button) =>
     button.addEventListener("click", async () => {
+      const { shareLinkWarningAcknowledged } = await chrome.storage.local.get({
+        shareLinkWarningAcknowledged: false,
+      });
+      if (!shareLinkWarningAcknowledged) {
+        const confirmed = window.confirm(
+          "Treat share links as sensitive. They may contain Optimizely preview credentials.",
+        );
+        if (!confirmed) return;
+        await chrome.storage.local.set({ shareLinkWarningAcknowledged: true });
+      }
       await copyText(
         button.closest(".experiment").querySelector("[data-force-link]").value,
         "Variant share link copied",
@@ -881,6 +902,13 @@ function renderCookieModes() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const runtimeOverlay = $("#optimizely-overlay");
+  document.querySelector("main")?.append(runtimeOverlay);
+  const positionRuntimeOverlay = () => {
+    runtimeOverlay.style.top = `${document.querySelector("header")?.getBoundingClientRect().height || 0}px`;
+  };
+  positionRuntimeOverlay();
+  window.addEventListener("resize", positionRuntimeOverlay);
   const sourceTabId = Number(
     new URLSearchParams(window.location.search).get("tabId"),
   );
@@ -969,6 +997,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (currentState) render(currentState);
   });
   $("#retry-api").addEventListener("click", refreshApi);
+  const versionLabel = $("#version-easter-egg");
+  const version = chrome.runtime.getManifest().version;
+  versionLabel.textContent = `Version ${version}`;
+  versionLabel.setAttribute("aria-label", `Extension version ${version}`);
   $("#version-easter-egg")?.addEventListener("click", triggerVersionEasterEgg);
   $("#skip-api-setup").addEventListener("click", async () => {
     await chrome.storage.local.set({ apiSetupSkipped: true });
@@ -1044,8 +1076,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     window.close();
   });
-  $("#reload-page").addEventListener("click", () => chrome.tabs.reload(tab.id));
-  $("#refresh").addEventListener("click", () => chrome.tabs.reload(tab.id));
+  $("#reload-page").addEventListener("click", reloadCurrentTab);
+  $("#refresh").addEventListener("click", reloadCurrentTab);
   $("#open-options").addEventListener("click", () =>
     chrome.runtime.openOptionsPage(),
   );

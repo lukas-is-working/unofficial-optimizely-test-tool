@@ -309,9 +309,9 @@ body.options-page {
   gap: 16px;
   margin-top: 4px;
   padding: 16px 18px;
-  border: 1px solid #efb9bd;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff8f8;
+  background: #fff;
 }
 .settings-card button {
   border: 1px solid #d9aeb2;

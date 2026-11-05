@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.3.0] - 2026-11-05
+
+### Added
+
+- Added a one-time warning before copying potentially sensitive Optimizely share links.
+- Added smooth disclosure animations for experiment details and event groups.
+- Added a visible runtime overlay that only blocks the main content area.
+
+### Improved
+
+- Reload now restarts the complete runtime and API inspection flow.
+- Header actions remain available while Optimizely is being checked.
+- Unified action-button sizing in experiment cards.
+- Improved dark-mode contrast for buttons, chevrons, cookie names, links and reset controls.
+- Added a compact, consistent header action group.
+- Improved the popup Easter egg with a readable themed message background.
+
+### Fixed
+
+- The Optimizely warning is hidden while a reload is still being evaluated.
+- Runtime overlay positioning is limited to the visible area below the header.
+- Theme storage failures fall back to the system theme.
+
 ## [1.2.0] - 2026-11-04
 
 ### Added

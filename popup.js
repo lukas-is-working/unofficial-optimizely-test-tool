@@ -560,8 +560,9 @@ function render(state) {
   currentState = state;
   // Do not show the missing-runtime warning while the initial page check is
   // still running; the first-run token dialog should remain in front.
-  $("#optimizely-overlay").hidden =
-    state.runtimePending || state.optimizelyLoaded;
+  const runtimeOverlay = $("#optimizely-overlay");
+  runtimeOverlay.hidden = state.runtimePending || state.optimizelyLoaded;
+  document.body.classList.toggle("runtime-blocked", !runtimeOverlay.hidden);
   $("#status").textContent = state.experiments.length
     ? `${state.experiments.length} detected`
     : "None detected";
@@ -902,13 +903,6 @@ function renderCookieModes() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const runtimeOverlay = $("#optimizely-overlay");
-  document.querySelector("main")?.append(runtimeOverlay);
-  const positionRuntimeOverlay = () => {
-    runtimeOverlay.style.top = `${document.querySelector("header")?.getBoundingClientRect().height || 0}px`;
-  };
-  positionRuntimeOverlay();
-  window.addEventListener("resize", positionRuntimeOverlay);
   const sourceTabId = Number(
     new URLSearchParams(window.location.search).get("tabId"),
   );

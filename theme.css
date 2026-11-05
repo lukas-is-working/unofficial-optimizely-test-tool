@@ -88,6 +88,15 @@
   border-color: var(--line);
   background: #232826;
 }
+:root[data-theme="dark"] .setup-dialog #skip-api-setup {
+  border-color: #59635e;
+  background: #303733;
+  color: #f1f4f2;
+}
+:root[data-theme="dark"] .setup-dialog #skip-api-setup:hover {
+  border-color: #69756e;
+  background: #3b4540;
+}
 :root[data-theme="dark"] .settings-card .danger-button,
 :root[data-theme="dark"] .settings-footer .danger-button {
   border-color: #e58b93;

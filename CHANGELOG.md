@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.1] - 2026-11-05
+
+### Fixed
+
+- Kept the header interactive while the Optimizely runtime warning is visible without allowing the content backdrop to drift during scrolling.
+- Restored the full runtime check after using the reload controls.
+- Kept the API setup dialog above the runtime overlay.
+- Improved spacing in the initial API-token dialog.
+- Matched the dark-mode Skip button to the other secondary buttons.
+
 ## [1.3.0] - 2026-11-05
 
 ### Added

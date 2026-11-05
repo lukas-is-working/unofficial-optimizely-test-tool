@@ -29,7 +29,12 @@ body {
   color: var(--ink);
   background: #f7f7f7;
 }
+body.runtime-blocked {
+  overflow: hidden;
+}
 header {
+  position: relative;
+  z-index: 10;
   padding: 13px 16px 12px;
   display: flex;
   justify-content: space-between;
@@ -93,11 +98,10 @@ main {
   gap: 10px;
 }
 #optimizely-overlay {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
   z-index: 5;
+}
+#api-setup-overlay {
+  z-index: 20;
 }
 .card {
   background: #fff;

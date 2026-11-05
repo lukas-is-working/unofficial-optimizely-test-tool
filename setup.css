@@ -27,7 +27,7 @@
   margin: 0;
 }
 .setup-dialog button {
-  margin-top: 4px;
+  margin-top: 0;
   font-weight: 600;
 }
 .setup-dialog #save-token {
@@ -66,4 +66,7 @@
 }
 .setup-dialog .error {
   margin: 0;
+}
+.setup-dialog .error:empty {
+  display: none;
 }

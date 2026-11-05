@@ -649,7 +649,7 @@ function render(state) {
           const options = variants
             .map(
               (variant) =>
-                `<option value="${escapeHtml(variant.id)}" ${variant.id === experiment.variationId ? "selected" : ""}>${variant.id === experiment.variationId ? "Current: " : ""}${escapeHtml(variant.name)}</option>`,
+                `<option value="${escapeHtml(variant.id)}" ${variant.id === experiment.variationId ? "selected" : ""}>${escapeHtml(variant.name)}</option>`,
             )
             .join("");
           const experimentUrl = metadata.projectId

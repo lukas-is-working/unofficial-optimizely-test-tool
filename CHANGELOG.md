@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.2] - 2026-11-05
+
+### Improved
+
+- Removed the redundant `Current:` prefix from variant dropdown options.
+- The selected native dropdown option remains the single source of visible current-variant state.
+- Improved spacing around variant IDs, experiment IDs and status badges.
+- Kept variant IDs, share links and QR-code behavior unchanged.
+
 ## [1.3.1] - 2026-11-05
 
 ### Fixed

@@ -36,6 +36,8 @@ small {
 }
 
 .experiment-id {
+  display: block;
+  margin-top: 3px;
   font-size: 11px;
   font-weight: 400;
 }
@@ -66,7 +68,7 @@ small {
 
 .variant-id {
   display: block;
-  margin-top: 2px;
+  margin-top: 5px;
   font-size: 11px;
   font-weight: 400;
 }
@@ -134,6 +136,10 @@ small {
   border-color: #cbd2ce;
   background: #f3f5f4;
   color: #40574e;
+}
+.experiment-name > .status-badge {
+  display: flex;
+  margin-top: 4px;
 }
 .experiment {
   padding: 0;

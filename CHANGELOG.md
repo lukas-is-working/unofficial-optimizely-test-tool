@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.3] - 2026-11-13
+
+### Fixed
+
+- Removed duplicate Console logging for Optimizely Custom Events.
+- Custom Events are now diagnosed through the central Optimizely listener only.
+- The extension Event Log continues to record the actual event call once.
+
 ## [1.3.2] - 2026-11-05
 
 ### Improved

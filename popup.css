@@ -23,11 +23,14 @@
 * {
   box-sizing: border-box;
 }
+html,
 body {
   width: 430px;
+  max-width: 430px;
   margin: 0;
   color: var(--ink);
   background: #f7f7f7;
+  overflow-x: hidden;
 }
 body.runtime-blocked {
   overflow: hidden;
@@ -162,11 +165,18 @@ button.muted {
 .variant-row {
   display: flex;
   gap: 6px;
+  min-width: 0;
   margin-top: 6px;
+}
+.variant-row select {
+  width: 0;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 select,
 input {
   min-width: 0;
+  max-width: 100%;
   flex: 1;
   border: 1px solid #cfcfcf;
   border-radius: 6px;
@@ -184,6 +194,7 @@ input:focus {
 }
 .variant-row .copy {
   flex: 0 0 145px;
+  white-space: nowrap;
 }
 .empty {
   color: var(--muted);

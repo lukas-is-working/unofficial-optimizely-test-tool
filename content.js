@@ -421,30 +421,6 @@
     const wrapped = function (...args) {
       const event = describeCall(args, source);
       emit(event);
-      if (
-        source === "Optimizely" &&
-        (event.method === "trackEvent" || event.method === "event") &&
-        !loggingDisabled
-      ) {
-        const payload = event.payload || {};
-        const eventName =
-          payload.name ||
-          payload.eventName ||
-          payload.event_name ||
-          event.eventName ||
-          "<hidden>";
-        console.groupCollapsed(
-          `Optimizely '${eventName}' custom event was fired`,
-        );
-        console.log(
-          `API name: '${payload.apiName || payload.api_name || payload.eventApiName || event.apiName || "<hidden>"}'`,
-        );
-        if (payload.metrics?.revenue !== undefined)
-          console.log(`revenue: ${payload.metrics.revenue} cents`);
-        if (payload.tags?.value !== undefined)
-          console.log(`value: ${payload.tags.value}`);
-        console.groupEnd();
-      }
       return original.apply(this, args);
     };
     wrapped.__bfWrapped = true;

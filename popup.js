@@ -56,6 +56,7 @@ async function reloadCurrentTab() {
 }
 let cookieNames = [];
 let configuredCookies = [];
+const cookieLifetimeSeconds = 90 * 24 * 60 * 60;
 
 async function getCookieStoreId() {
   if (!tab?.id) return undefined;
@@ -102,6 +103,7 @@ async function updateCookie(toggle) {
         name: toggle.dataset.cookie,
         value: "1",
         path: "/",
+        expirationDate: Math.floor(Date.now() / 1000) + cookieLifetimeSeconds,
         secure: new URL(tab.url).protocol === "https:",
         ...cookieStore,
       });

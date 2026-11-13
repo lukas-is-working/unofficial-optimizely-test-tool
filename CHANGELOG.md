@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4] - 2026-11-13
+
+### Changed
+
+- Configured testing cookies now persist for 90 days instead of being session-only cookies.
+- Cookie deletion continues to remove cookies immediately.
+
 ## [1.3.3] - 2026-11-13
 
 ### Fixed

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Unofficial Optimizely Test Tool",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Unofficial community tool for testing Optimizely experiments and events on local and remote shop environments.",
   "permissions": [
     "storage",
